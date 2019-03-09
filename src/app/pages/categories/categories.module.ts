@@ -10,6 +10,9 @@ import { CategoryFormComponent } from './category-form/category-form.component';
     CommonModule,
     CategoriesRoutingModule
   ],
-  declarations: [CategoryListComponent, CategoryFormComponent]
+  declarations: [
+    CategoryListComponent,
+    CategoryFormComponent
+  ]
 })
 export class CategoriesModule { }
