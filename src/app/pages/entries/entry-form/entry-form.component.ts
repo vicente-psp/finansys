@@ -8,6 +8,8 @@ import { EntryService } from '../shared/entry.service';
 import { switchMap } from 'rxjs/operators';
 
 import toastr from 'toastr';
+import { Category } from '../../categories/shared/category.model';
+import { CategoryService } from '../../categories/shared/category.service';
 
 @Component({
   selector: 'app-entry-form',
@@ -22,6 +24,7 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
   serverErrorMessages: string[] = null;
   submittingForm: boolean = false;
   entry: Entry = new Entry();
+  categories: Array<Category>;
 
   imaskConfig = {
     mask: Number,
@@ -45,16 +48,19 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
     dateFormat: 'dd/mm/yy'
 };
 
-  constructor(private entryService: EntryService,
-              private route: ActivatedRoute,
-              private router: Router,
-              private formBuilder: FormBuilder
-              ) { }
+  constructor(
+    private entryService: EntryService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private formBuilder: FormBuilder,
+    private categoryService: CategoryService
+  ) {}
 
   ngOnInit() {
     this.setCurrentAction();
     this.buildEntryForm();
     this.loadEntry();
+    this.loadCategories();
   }
 
   ngAfterContentChecked(){
@@ -167,6 +173,12 @@ export class EntryFormComponent implements OnInit, AfterContentChecked {
     } else {
       this.serverErrorMessages = ['Falha na comunicação com o servidor, tente mais tarde'];
     }
+  }
+
+  private loadCategories(){
+    this.categoryService.getAll().subscribe(
+      categories => this.categories = categories
+    )
   }
 
 }
