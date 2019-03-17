@@ -20,21 +20,20 @@ export class EntryService extends BaseResourceService<Entry> {
   }
 
   create(entry: Entry): Observable<Entry> {
-    return this.categoryService.getById(entry.categoryId).pipe(
-      flatMap(category => {
-        entry.category = category;
-        return super.create(entry);
-      })
-    )
-
+    return this.setCategoryAndSendToServer(entry, super.create.bind(this));
   }
 
   update(entry: Entry): Observable<Entry> {
+    return this.setCategoryAndSendToServer(entry, super.update.bind(this));
+  }
+
+  setCategoryAndSendToServer(entry: Entry, sendFn: any): Observable<Entry> {
     return this.categoryService.getById(entry.categoryId).pipe(
       flatMap(category => {
         entry.category = category;
-        return super.update(entry);
-      })
+        return sendFn(entry);
+      }),
+      catchError(this.handleError)
     )
   }
 }
