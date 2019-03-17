@@ -8,6 +8,7 @@ import { map, catchError } from 'rxjs/operators';
 export abstract class BaseResourceService<T extends BaseResourceModel> {
 
     protected httpClient: HttpClient;
+    
     constructor(
         protected apiPath: string,
         protected injector: Injector
