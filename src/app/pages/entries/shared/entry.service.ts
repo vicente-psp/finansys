@@ -16,14 +16,13 @@ export class EntryService extends BaseResourceService<Entry> {
   protected httpClient: HttpClient;
 
   constructor(protected injector: Injector, private categoryService: CategoryService) {
-    super('api/entries', injector);
+    super('api/entries', injector, Entry.fromJson);
   }
 
   create(entry: Entry): Observable<Entry> {
     return this.categoryService.getById(entry.categoryId).pipe(
       flatMap(category => {
         entry.category = category;
-
         return super.create(entry);
       })
     )
@@ -37,19 +36,5 @@ export class EntryService extends BaseResourceService<Entry> {
         return super.update(entry);
       })
     )
-  }
-
-
-  protected jsonDataToResources(jsonData: any[]): Entry[] {
-    const entries: Entry[] = [];
-    jsonData.forEach(element => {
-      let entry = Object.assign(new Entry(), element);
-      entries.push(entry);
-    });
-    return entries;
-  }
-
-  protected jsonDataToResource(jsonData: any): Entry {
-    return Object.assign(new Entry(), jsonData);
   }
 }
