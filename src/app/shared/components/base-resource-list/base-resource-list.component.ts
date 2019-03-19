@@ -10,10 +10,10 @@ export abstract class BaseResourceListComponent<T extends BaseResourceModel> imp
   constructor(private resourcesService: BaseResourceService<T>) { }
 
   ngOnInit() {
-    this.listEntries();
+    this.listResources();
   }
 
-  listEntries(){
+  listResources(){
     this.resourcesService.getAll().subscribe(
       resources => this.resources = resources.sort((a,b) => b.id - a.id),
       error => alert('Erro ao listar')
