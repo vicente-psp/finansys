@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { BaseResourceListComponent } from '../../../shared/components/base-resource-list/base-resource-list.component'
 
