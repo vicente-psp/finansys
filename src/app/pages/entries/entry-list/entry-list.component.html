@@ -28,24 +28,24 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let entry of entries">
+    <tr *ngFor="let resource of resources">
       <td>
-        <strong>{{ entry.name }}</strong><br>
-        <small class="text-success">{{ entry.date }}</small><br>
-        <small *ngIf="entry.description">{{ entry.description }}</small>
+        <strong>{{ resource.name }}</strong><br>
+        <small class="text-success">{{ resource.date }}</small><br>
+        <small *ngIf="resource.description">{{ resource.description }}</small>
       </td>
       <td>
-        {{ entry.category.name }}
+        {{ resource.category.name }}
       </td>
       <td class="text-right">
-        <strong [class.text-success]="entry.type == 'revenue'" [class.text-danger]="entry.type == 'expense'">
-          {{ entry.amount }}
+        <strong [class.text-success]="resource.type == 'revenue'" [class.text-danger]="resource.type == 'expense'">
+          {{ resource.amount }}
         </strong><br>
-        <span class="badge badge-light">{{ entry.paidText }}</span>
+        <span class="badge badge-light">{{ resource.paidText }}</span>
       </td>
       <td class="text-center">
-        <a [routerLink]="[entry.id, 'edit']" class="btn btn-outline-info btn-sm mr-2">Editar</a>
-        <button (click)="deleteEntry(entry)" class="btn btn-outline-danger btn-sm">Excluir</button>
+        <a [routerLink]="[resource.id, 'edit']" class="btn btn-outline-info btn-sm mr-2">Editar</a>
+        <button (click)="deleteResource(resource)" class="btn btn-outline-danger btn-sm">Excluir</button>
       </td>
     </tr>
   </tbody>
