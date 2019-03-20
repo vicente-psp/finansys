@@ -2,45 +2,44 @@
   [itens]="[{text: 'Categorias', link: '/categories'}, {text: pageTitle}]"
 ></app-bread-crumb>
 
-<div class="row mb-4">
-  <div class="col-md">
-    <h1 class="h2 border-left pl-2">
-      {{ pageTitle }}
-    </h1>
+<app-page-header
+  [page-title]="pageTitle"
+  button-text="<< Voltar"
+  button-link="/categories"
+  button-class="btn-light"
+></app-page-header>
+
+<form [formGroup]="resourceForm" (submit)="submitForm()">
+  <div class="card">
+    <div class="card-header">
+      Informações sobre a categoria
+    </div>
+    <div class="card-body">
+      <div class="form-row">
+        <div class="form-group col-md-4">
+          <label for="name">Nome</label>
+          <input type="text" class="form-control" id="name" formControlName="name">
+
+          <div class="text-danger" *ngIf="resourceForm.get('name').invalid && resourceForm.get('name').touched">
+            <div *ngIf="resourceForm.get('name').errors.required">Nome é obrigatório</div>
+            <div *ngIf="resourceForm.get('name').errors.minlength">Deve ter no mínimo 2 caracteres</div>
+          </div>
+        </div>
+        <div class="form-group col-md-8">
+          <label for="description">Descrição</label>
+          <input type="text" class="form-control" id="description" formControlName="description">
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="col-md">
-    <a routerLink="/categories" class="btn btn-light float-right">
-      << Voltar </a> </div> </div> <form [formGroup]="resourceForm" (submit)="submitForm()">
-        <div class="card">
-          <div class="card-header">
-            Informações sobre a categoria
-          </div>
-          <div class="card-body">
-            <div class="form-row">
-              <div class="form-group col-md-4">
-                <label for="name">Nome</label>
-                <input type="text" class="form-control" id="name" formControlName="name">
 
-                <div class="text-danger" *ngIf="resourceForm.get('name').invalid && resourceForm.get('name').touched">
-                  <div *ngIf="resourceForm.get('name').errors.required">Nome é obrigatório</div>
-                  <div *ngIf="resourceForm.get('name').errors.minlength">Deve ter no mínimo 2 caracteres</div>
-                </div>
-              </div>
-              <div class="form-group col-md-8">
-                <label for="description">Descrição</label>
-                <input type="text" class="form-control" id="description" formControlName="description">
-              </div>
-            </div>
-          </div>
-        </div>
+  <div class="alert alert-danger mt-3" *ngIf="serverErrorMessages">
+    <strong>Erro no servidor</strong>
+    <ul>
+      <li *ngFor="let error of serverErrorMessages">{{ error }}</li>
+    </ul>
+  </div>
 
-        <div class="alert alert-danger mt-3" *ngIf="serverErrorMessages">
-          <strong>Erro no servidor</strong>
-          <ul>
-            <li *ngFor="let error of serverErrorMessages">{{ error }}</li>
-          </ul>
-        </div>
-
-        <button [disabled]="submittingForm || resourceForm.invalid" type="submit"
-          class="btn btn-primary btn-lg float-right mt-2">Salvar</button>
-        </form>
+  <button [disabled]="submittingForm || resourceForm.invalid" type="submit"
+    class="btn btn-primary btn-lg float-right mt-2">Salvar</button>
+</form>
