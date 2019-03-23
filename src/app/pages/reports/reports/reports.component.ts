@@ -18,8 +18,8 @@ export class ReportsComponent implements OnInit {
   revenueTotal: any = 0;
   balance: any = 0;
 
-  expenseCharData: any;
-  revenueCharData: any;
+  expenseChartData: any;
+  revenueChartData: any;
 
   chartOptions = {
     scales: {
@@ -33,6 +33,29 @@ export class ReportsComponent implements OnInit {
     }
   }
 
+  months = [
+    { value: 1, text: 'Janeiro' },
+    { value: 2, text: 'Fevereiro' },
+    { value: 3, text: 'Março' },
+    { value: 4, text: 'Abril' },
+    { value: 5, text: 'Maio' },
+    { value: 6, text: 'Junho' },
+    { value: 7, text: 'Julho' },
+    { value: 8, text: 'Agosto' },
+    { value: 9, text: 'Setembro' },
+    { value: 10, text: 'Outubro' },
+    { value: 11, text: 'Novembro' },
+    { value: 12, text: 'Dezembro' }
+  ]
+
+  years = [
+    { value: 2016, text: '2016'},
+    { value: 2017, text: '2017'},
+    { value: 2018, text: '2018'},
+    { value: 2019, text: '2019'},
+    { value: 2020, text: '2020'},
+  ]
+
   categories: Category[] = [];
   entries: Entry[] = [];
 
@@ -42,15 +65,15 @@ export class ReportsComponent implements OnInit {
   constructor(private entryService: EntryService, private categoryService: CategoryService) { }
 
   ngOnInit() {
-    this.categoryService.getAll().subscribe(categories => this.balance.categories = categories);
+    this.categoryService.getAll().subscribe(categories => this.categories = categories);
   }
 
   generateReports() {
     const month = this.month.nativeElement.value;
     const year = this.year.nativeElement.value;
 
-    if (!month || year) {
-      alert('Selecione')
+    if (!month || !year) {
+      alert('Selecione o mês e ano para gerar o relatório!')
     } else {
       this.entryService.getByMonthAndYear(month, year).subscribe(this.setValues.bind(this))
     }
@@ -60,7 +83,7 @@ export class ReportsComponent implements OnInit {
     this.entries = entries;
 
     this.calculateBalance();
-    this.setCharData();
+    this.setChartData();
   }
 
   private calculateBalance() {
@@ -75,16 +98,22 @@ export class ReportsComponent implements OnInit {
       }
     })
 
-    this.expenseTotal = currencyFormatter.formatter(expenseTotal, { code: 'BRL'})
-    this.revenueTotal = currencyFormatter.formatter(revenueTotal, { code: 'BRL'})
-    this.balance = currencyFormatter.formatter(revenueTotal - expenseTotal, { code: 'BRL'})
+    this.expenseTotal = currencyFormatter.format(expenseTotal, { code: 'BRL'})
+    this.revenueTotal = currencyFormatter.format(revenueTotal, { code: 'BRL'})
+    this.balance = currencyFormatter.format(revenueTotal - expenseTotal, { code: 'BRL'})
   }
 
-  private setCharData() {
+  private setChartData() {
+    this.expenseChartData = this.getChartData('expense', 'Gráfico de Receitas', '#9CCC65');
+    this.revenueChartData = this.getChartData('revenue', 'Gráfico de Despesas', '#e03131');
+  }
+
+  private getChartData(entryType: string, title: string, color: string) {
     const chartData = [];
+    
     this.categories.forEach(category => {
       const filteredEntries = this. entries.filter(
-        entry => (entry.categoryId == category.id) && (entry.type == 'revenue')
+        entry => (entry.categoryId == category.id) && (entry.type == entryType)
       );
 
       if (filteredEntries.length > 0) {
@@ -97,15 +126,15 @@ export class ReportsComponent implements OnInit {
           totalAmount: totalAmount,
         })
       }
-      this.revenueCharData = {
-        labels: chartData.map(item => item.categoryName),
-        datasets: [{
-          label: 'Gráfico de Receitas',
-          backgroundColor: '#9CCC65'
-        }]
-      }
-    })
+    });
+      
+    return {
+      labels: chartData.map(item => item.categoryName),
+      datasets: [{
+        label: title,
+        backgroundColor: color,
+        data: chartData.map(item => item.totalAmount)
+      }]
+    }
   }
-
-
 }
