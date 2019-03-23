@@ -8,7 +8,7 @@ import { Entry } from './entry.model';
 import { CategoryService } from '../../categories/shared/category.service';
 import { BaseResourceService } from '../../../shared/services/base-resource.service';
 
-import *as moment from 'moment';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
