@@ -8,7 +8,7 @@ import { Entry } from './entry.model';
 import { CategoryService } from '../../categories/shared/category.service';
 import { BaseResourceService } from '../../../shared/services/base-resource.service';
 
-import *as moment from 'moment';
+import * as moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -47,9 +47,9 @@ export class EntryService extends BaseResourceService<Entry> {
 
   private filterByMonthAndYear(entries: Entry[], month: number, year: number) {
     return entries.filter(entry => {
-      const entryDate = moment(entry.date, 'DD/MM/YYYY');
-      const monthMatches = entryDate.month() + 1 === month;
-      const yearMatches = entryDate.year() === year;
+      const entryDate = moment(entry.date, "DD/MM/YYYY");
+      const monthMatches = entryDate.month() + 1 == month;
+      const yearMatches = entryDate.year() == year;
 
       if (monthMatches && yearMatches) return entry;
     })
